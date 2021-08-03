@@ -1,13 +1,24 @@
 import math
 
 class Sensor:
-  def __init__(self,data):
-    self.Temperature = data[0x00:0x02]
-    self.Humidity = data[0x02:0x03]
-    self.MaxTemperature = data[0x03:0x05]
-    self.MaxHumidity = data[0x05:0x06]
-    self.MinTemperature = data[0x06:0x08]
-    self.MinHumidity = data[0x08:0x09]
+  def __init__(self):
+    self.__temperature = 0
+    self.__humidity = 0
+    self.__maxTemperature = 0
+    self.__maxHumidity = 0
+    self.__minTemperature = 0
+    self.__minHumidity = 0
+
+  def Update(self,data):
+    if (data == b'\0xff\0xff\0xff\0xff\0xff\0xff\0xff\0xff\0xff'):
+      self.__init__()
+    else:
+      self.Temperature = data[0x00:0x02]
+      self.Humidity = data[0x02:0x03]
+      self.MaxTemperature = data[0x03:0x05]
+      self.MaxHumidity = data[0x05:0x06]
+      self.MinTemperature = data[0x06:0x08]
+      self.MinHumidity = data[0x08:0x09]
 
   def __tfrombytes(self,data):
     raw = int.from_bytes(data,byteorder="little")

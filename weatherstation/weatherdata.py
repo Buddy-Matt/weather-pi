@@ -4,7 +4,16 @@ import math
 
 class WeatherData:
 
-  def __init__(self, data):
+  def __init__(self):
+    self.__timestamp = None
+    self.__battery = None
+    self.__lostsignal = None
+    self.__mainSensor = Sensor()
+    self.__remoteSensor = Sensor()
+    self.__pressure = None
+    self.__forecast = None
+
+  def Update(self,data):
     self.Timestamp = data[0x01:0x08]
 
     self.__battery = data[0x2d]
@@ -12,8 +21,8 @@ class WeatherData:
 
     self.MainSensor = data[0x09:0x12]
     self.RemoteSensor = data[0x12:0x1b]
-#    self.RemoteSensor = data[0x1b:0x24]
-#    self.RemoteSensor = data[0x24:0x2d]
+#    self.RemoteSensor2 = data[0x1b:0x24]
+#    self.RemoteSensor3 = data[0x24:0x2d]
     self.Pressure = data[0x2f:0x31]
     self.Forecast = data[0x31]
 
@@ -61,11 +70,11 @@ class WeatherData:
     return self.__mainSensor
   @MainSensor.setter
   def MainSensor(self,data: bytearray):
-    self.__mainSensor = Sensor(data)
+    self.__mainSensor.Update(data)
 
   @property
   def RemoteSensor(self):
     return self.__remoteSensor
   @RemoteSensor.setter
   def RemoteSensor(self,data: bytearray):
-    self.__remoteSensor = Sensor(data)
+    self.__remoteSensor.Update(data)
