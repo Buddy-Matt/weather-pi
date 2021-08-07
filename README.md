@@ -21,4 +21,5 @@ With the following features:
 
 * Listens for UDP packets from the Digoo unit (Sent via DNS override of the default SMARTSERVER.EMAXTIME.CN server address)
 * Deciphers data and displays to screen via terminal
+* Basic GUI running in its own thread. Updates may not be thread safe, but haven't seen any breakage yet
 
