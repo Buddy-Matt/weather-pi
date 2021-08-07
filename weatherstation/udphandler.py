@@ -31,12 +31,20 @@ class UDPHandler():
 
   def __init__(self,weatherData: WeatherData):
     self.__weatherData = weatherData
+    self.__onUpdate = None
 
   async def startListening(self):
     loop = asyncio.get_running_loop()
     await loop.create_datagram_endpoint(lambda : self.__Factory(self), local_addr=(HOST,PORT))
     print("server created")
 
+  @property
+  def OnUpdate(self):
+    return self.__onUpdate
+
+  @OnUpdate.setter
+  def OnUpdate(self, func):
+    self.__onUpdate = func
 
   def decode_weather(self, data: bytearray):
     self.__weatherData.Update(data)
@@ -54,4 +62,6 @@ class UDPHandler():
     print("Indoor Sensor")
     print("==============")
     self.__weatherData.MainSensor.OutputValues()
+    if self.__onUpdate != None:
+      self.__onUpdate()
 

@@ -8,3 +8,5 @@ def install(package):
 
 
 install('aiohttp')
+install('pillow')
+install('pyyaml')
