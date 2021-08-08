@@ -52,6 +52,7 @@ class WeatherData:
     return self.__forecast
   @Forecast.setter
   def Forecast(self,data):
+    self.__rawforecast = data
     if data == 0x00:
       self.__forecast = 'Sunny'
     elif data == 0x10:
@@ -64,6 +65,13 @@ class WeatherData:
       self.__forecast = 'Thunder'
     else:
       self.__forecast = 'Unknown (%x)' % data
+
+  @property
+  def RawForecast(self):
+    return self.__rawforecast
+  @RawForecast.setter
+  def RawForecast(self,data):
+    self.Forcecast(data)
 
   @property
   def MainSensor(self):
