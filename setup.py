@@ -10,5 +10,6 @@ def install(package):
 install('aiohttp')
 install('pillow')
 install('pyyaml')
+install('tkinter')
 install('tksvg')
 install('pylunar')
