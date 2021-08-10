@@ -106,30 +106,38 @@ class GUI():
 
 
   def updateFrames(self):
-    mapdata = json.loads(requests.get('https://api.rainviewer.com/public/weather-maps.json').content)
-    newframe = False
-    if len(self.__rainimages) == 0:
-      for frame in mapdata['radar']['past']:
-        self.addFrame(frame)
-      newframe = True
-    elif mapdata['radar']['past'][12]['time'] != self.__rainimages[12][1]:
-      self.addFrame(mapdata['radar']['past'][12])
-      self.__rainimages.pop(0)
-      newframe = True
+    try:
+      mapdata = json.loads(requests.get('https://api.rainviewer.com/public/weather-maps.json').content)
+      newframe = False
+      if len(self.__rainimages) == 0:
+        for frame in mapdata['radar']['past']:
+          self.addFrame(frame)
+        newframe = True
+      elif mapdata['radar']['past'][12]['time'] != self.__rainimages[12][1]:
+        self.addFrame(mapdata['radar']['past'][12])
+        self.__rainimages.pop(0)
+        newframe = True
 
-    if newframe:
-      dispImage = ImageTk.PhotoImage(self.__rainimages[12][0])
-      self.__mapImage.configure(image=dispImage)
-      self.__mapImage.image = dispImage
-      self.__RainTime.set(epochToTimeString(self.__rainimages[12][1]))
+      if newframe:
+        dispImage = ImageTk.PhotoImage(self.__rainimages[12][0])
+        self.__mapImage.configure(image=dispImage)
+        self.__mapImage.image = dispImage
+        self.__RainTime.set(epochToTimeString(self.__rainimages[12][1]))
 
-    return newframe
+      return newframe
+    except:
+      return false
 
-  def frameCheckTimer(self):
+
+  def startTimedFuncs(self):
+    self.__moonPhase.after(50, lambda: self.moonCheck())
+    self.__mapImage.after(100, lambda: self.rainCheck())
+
+  def rainCheck(self):
     print ("checking for new frames")
     self.__mapImage.after((nextFrameTime() if self.updateFrames() else 0) + 15000,lambda: self.frameCheckTimer())
 
-  def moonCheckTimer(self):
+  def moonCheck(self):
     print ("Checking moon phase")
     self.__mi.update(datetime.utcnow())
     phaseicon = self.__phases[self.__mi.phase_name()]
@@ -251,8 +259,7 @@ class GUI():
     ttk.Label(form,textvariable=self.__RainTime, anchor="center", style="TLabel").place(relx=0.0, rely=1.0, anchor="sw")
     
     #initiate various timed updates
-    self.frameCheckTimer()
-    self.moonCheckTimer()
+    self.startTimedFuncs()
     #get initial values
     self.Update()
 
