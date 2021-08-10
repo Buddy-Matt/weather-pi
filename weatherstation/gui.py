@@ -129,7 +129,7 @@ class GUI():
 
       return newframe
     except:
-      return false
+      return False
 
 
   def startTimedFuncs(self):
