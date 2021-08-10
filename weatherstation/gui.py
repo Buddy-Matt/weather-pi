@@ -55,7 +55,7 @@ def grabImages(target,preXYurl,postXYurl):
   for x in range(0,2):
     for y in range(-1,2):
       url = "%s%s/%s/%s%s" % (preXYurl, target[2], target[0] + x, target[1] + y, postXYurl)
-      print("Grabbing %s" % url)
+#      print("Grabbing %s" % url)
       tile = Image.open(requests.get(url, stream=True).raw)
       finalimage.paste(tile,(x*256,(y+1)*256))
 
@@ -113,7 +113,7 @@ class GUI():
       if len(self.__rainimages) == 0:
         for frame in mapdata['radar']['past']:
           self.addFrame(frame)
-        newframe = True
+        newframe = (int((datetime.utcnow() - epoch).total_seconds()) - self.__rainimages[12][1]) < 600
       elif mapdata['radar']['past'][12]['time'] != self.__rainimages[12][1]:
         self.addFrame(mapdata['radar']['past'][12])
         self.__rainimages.pop(0)
