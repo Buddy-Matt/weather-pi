@@ -9,6 +9,7 @@ import math
 import json
 import yaml
 import pylunar
+import sys
 
 #Helper to turn GPS into tile loc
 def deg2num(lat_deg, lon_deg, zoom):
@@ -85,6 +86,7 @@ class GUI():
         __settings = yaml.load(stream, Loader=yaml.SafeLoader)
       except:
         print("malformed settings file")
+        sys.stdout.flush()        
         sys.exit()
 
     #preload images
@@ -136,10 +138,12 @@ class GUI():
 
   def rainCheck(self):
     print ("checking for new frames")
+    sys.stdout.flush()
     self.__mapImage.after((nextFrameTime() if self.updateFrames() else 0) + 15000,lambda: self.rainCheck())
 
   def moonCheck(self):
     print ("Checking moon phase")
+    sys.stdout.flush()
     self.__mi.update(datetime.utcnow())
     phaseicon = self.__phases[self.__mi.phase_name()]
     self.__moonPhase.configure(image=phaseicon)

@@ -2,6 +2,7 @@ import socket
 from weatherdata import WeatherData
 import os
 import asyncio
+import sys
 
 HOST, PORT = '0.0.0.0', 17000
 sock = socket.socket(socket.AF_INET,  # Internet
@@ -37,6 +38,7 @@ class UDPHandler():
     loop = asyncio.get_running_loop()
     await loop.create_datagram_endpoint(lambda : self.__Factory(self), local_addr=(HOST,PORT))
     print("server created")
+    sys.stdout.flush()
 
   @property
   def OnUpdate(self):
@@ -49,6 +51,7 @@ class UDPHandler():
   def decode_weather(self, data: bytearray):
     self.__weatherData.Update(data)
     print("Weather data received")
+    sys.stdout.flush()
     # os.system("clear")
     # print()
     # print(self.__weatherData.Timestamp)
@@ -58,11 +61,11 @@ class UDPHandler():
     # print()
     # print("Outdoor Sensor")
     # print("==============")
-    self.__weatherData.RemoteSensor.OutputValues()
+    # self.__weatherData.RemoteSensor.OutputValues()
     # print()
     # print("Indoor Sensor")
     # print("==============")
-    self.__weatherData.MainSensor.OutputValues()
+    # self.__weatherData.MainSensor.OutputValues()
     if self.__onUpdate != None:
       self.__onUpdate()
 
