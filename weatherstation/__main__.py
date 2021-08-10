@@ -4,6 +4,7 @@ from udphandler import UDPHandler
 from httpserver import HTTPServer
 from weatherdata import WeatherData
 from gui import GUI
+import sys
 
 #shared weather instance
 curWeather = WeatherData()
@@ -24,6 +25,7 @@ async def main():
   await udphandler.startListening()
   await httpserver.startServer(curWeather)
   print("Initilisation complete")
+  sys.stdout.flush()  
   #keep on chugging forever
   await asyncio.Event().wait()
 
