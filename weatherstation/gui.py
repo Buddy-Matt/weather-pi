@@ -77,6 +77,7 @@ def nextMidnight():
 
 class GUI():
   def __init__(self, weatherData):
+    self.ready = False
     self.__weatherData = weatherData
     #grab settings - probably needs it own class ultimately, but will be fine here for now
     with open("settings.yaml","r") as stream:
@@ -150,7 +151,7 @@ class GUI():
     threading.Thread(target=self.__init_gui_thread, args=()).start()
 
   def Update(self):
-    if self.__weatherData.Timestamp != None:
+    if self.ready and self.__weatherData.Timestamp != None:
       self.__InsideTemp.set("%.1f°C" % self.__weatherData.MainSensor.Temperature)
       self.__InsideHumid.set("%i%%" % self.__weatherData.MainSensor.Humidity)
       self.__OutsideTemp.set("%.1f°C" % self.__weatherData.RemoteSensor.Temperature)
@@ -209,13 +210,6 @@ class GUI():
     } 
 
 
-    #dynamic variables
-    self.__InsideTemp = tk.StringVar()
-    self.__InsideHumid = tk.StringVar()
-    self.__OutsideTemp = tk.StringVar()
-    self.__OutsideHumid = tk.StringVar()
-    self.__Barometer = tk.StringVar()
-    self.__RainTime = tk.StringVar()
 
     #map
     formmapimage = ImageTk.PhotoImage(self.__mapimage)
@@ -246,6 +240,14 @@ class GUI():
     fcframe = ttk.Labelframe(form,text="Met.no Forecast", relief=tk.SOLID)
     fcframe.place(x=405,y=345,width=390,height=130)
 
+    #dynamic variables
+    self.__InsideTemp = tk.StringVar()
+    self.__InsideHumid = tk.StringVar()
+    self.__OutsideTemp = tk.StringVar()
+    self.__OutsideHumid = tk.StringVar()
+    self.__Barometer = tk.StringVar()
+    self.__RainTime = tk.StringVar()
+    
     #labels
     ttk.Label(inframe,textvariable=self.__InsideTemp, anchor="center", style="Big.TLabel").place(relx=0,relwidth=1.0,rely=0,relheight=0.5)
     ttk.Label(inframe,textvariable=self.__InsideHumid, anchor="center", style="Big.TLabel").place(relx=0,relwidth=1.0,rely=0.5,relheight=0.5)
@@ -264,6 +266,7 @@ class GUI():
     self.Update()
 
     #start gui event loop
+    self.ready = True
     form.mainloop()
 
   def playHistory(self, frame):
