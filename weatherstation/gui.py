@@ -136,7 +136,7 @@ class GUI():
 
   def rainCheck(self):
     print ("checking for new frames")
-    self.__mapImage.after((nextFrameTime() if self.updateFrames() else 0) + 15000,lambda: self.frameCheckTimer())
+    self.__mapImage.after((nextFrameTime() if self.updateFrames() else 0) + 15000,lambda: self.rainCheck())
 
   def moonCheck(self):
     print ("Checking moon phase")
@@ -144,7 +144,7 @@ class GUI():
     phaseicon = self.__phases[self.__mi.phase_name()]
     self.__moonPhase.configure(image=phaseicon)
     self.__moonPhase.image = phaseicon
-    self.__moonPhase.after(nextMidnight() + 1000, lambda: self.moonCheckTimer())
+    self.__moonPhase.after(nextMidnight() + 1000, lambda: self.moonCheck())
 
 
   def startGUI(self):
@@ -247,7 +247,7 @@ class GUI():
     self.__OutsideHumid = tk.StringVar()
     self.__Barometer = tk.StringVar()
     self.__RainTime = tk.StringVar()
-    
+
     #labels
     ttk.Label(inframe,textvariable=self.__InsideTemp, anchor="center", style="Big.TLabel").place(relx=0,relwidth=1.0,rely=0,relheight=0.5)
     ttk.Label(inframe,textvariable=self.__InsideHumid, anchor="center", style="Big.TLabel").place(relx=0,relwidth=1.0,rely=0.5,relheight=0.5)
