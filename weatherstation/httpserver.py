@@ -10,7 +10,7 @@ class HTTPServer:
       return web.Response(text="Temperature: %.1f°C" % self.__weatherData.MainSensor.Temperature)
 
 
-  async def startServer(self,wd):
+  async def startServer(self):
     app = web.Application()
     app.add_routes([web.get('/',self.hello)])
     runner = web.AppRunner(app)

@@ -13,6 +13,14 @@ class WeatherData:
     self.__pressure = None
     self.__forecast = None
 
+  @property
+  def OnUpdate(self):
+    return self.__onUpdate
+
+  @OnUpdate.setter
+  def OnUpdate(self, func):
+    self.__onUpdate = func
+
   def Update(self,data):
     self.Timestamp = data[0x01:0x08]
 
@@ -25,6 +33,9 @@ class WeatherData:
 #    self.RemoteSensor3 = data[0x24:0x2d]
     self.Pressure = data[0x2f:0x31]
     self.Forecast = data[0x31]
+
+    if self.__onUpdate != None:
+      self.__onUpdate()
 
 
   @property
@@ -86,3 +97,13 @@ class WeatherData:
   @RemoteSensor.setter
   def RemoteSensor(self,data: bytearray):
     self.__remoteSensor.Update(data)
+
+
+  @property
+  def DataList(self):
+    return {
+      "Pressure": self.Pressure,
+      "Forecast": self.Forecast,
+      "MainSensor": self.MainSensor.DataList,
+      "RemoteSensor": self.RemoteSensor.DataList
+    }

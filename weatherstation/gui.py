@@ -7,9 +7,9 @@ import requests
 from datetime import datetime
 import math
 import json
-import yaml
 import pylunar
 import sys
+from settings import Settings
 
 #Helper to turn GPS into tile loc
 def deg2num(lat_deg, lon_deg, zoom):
@@ -77,26 +77,21 @@ def nextMidnight():
 
 
 class GUI():
-  def __init__(self, weatherData):
+  def __init__(self, weatherData, localData):
     self.ready = False
     self.__weatherData = weatherData
-    #grab settings - probably needs it own class ultimately, but will be fine here for now
-    with open("settings.yaml","r") as stream:
-      try:
-        __settings = yaml.load(stream, Loader=yaml.SafeLoader)
-      except:
-        print("malformed settings file")
-        sys.stdout.flush()        
-        sys.exit()
+    self.__localData = localData
+    settings = Settings()['map']
+
 
     #preload images
-    self.__tileTarget = deg2num(__settings['map']['lat'],__settings['map']['long'],__settings['map']['zoom'])
-    self.__cropOffset = (__settings['map']['cropx'],__settings['map']['cropy'], __settings['map']['cropx']+400, __settings['map']['cropy']+480)
+    self.__tileTarget = deg2num(settings['lat'],settings['long'],settings['zoom'])
+    self.__cropOffset = (settings['cropx'],settings['cropy'], settings['cropx']+400, settings['cropy']+480)
     self.__mapimage = grabImages(self.__tileTarget,"https://tile.openstreetmap.org/",".png").crop(self.__cropOffset)
     self.__rainimages = []
 
     #mooninfo
-    self.__mi = pylunar.MoonInfo(dd2dms(__settings['map']['lat']),dd2dms(__settings['map']['long']))
+    self.__mi = pylunar.MoonInfo(dd2dms(settings['lat']),dd2dms(settings['long']))
 
 
   def addFrame(self,frame):
@@ -138,12 +133,10 @@ class GUI():
 
   def rainCheck(self):
     print ("checking for new frames")
-    sys.stdout.flush()
     self.__mapImage.after((nextFrameTime() if self.updateFrames() else 0) + 15000,lambda: self.rainCheck())
 
   def moonCheck(self):
     print ("Checking moon phase")
-    sys.stdout.flush()
     self.__mi.update(datetime.utcnow())
     phaseicon = self.__phases[self.__mi.phase_name()]
     self.__moonPhase.configure(image=phaseicon)

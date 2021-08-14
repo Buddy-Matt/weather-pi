@@ -79,3 +79,10 @@ class Sensor:
   @MinTemperature.setter
   def MinTemperature(self,data):
     self.__minTemperature = self.__tfrombytes(data)
+
+  @property
+  def DataList(self):
+    return {
+      "Temperature": self.Temperature,
+      "Humidity": self.Humidity
+    }
