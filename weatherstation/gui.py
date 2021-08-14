@@ -129,7 +129,7 @@ class GUI():
 
   def startTimedFuncs(self):
     self.__moonPhase.after(50, lambda: self.moonCheck())
-    self.__mapImage.after(100, lambda: self.rainCheck())
+    self.__mapImage.after(1000, lambda: self.rainCheck())
 
   def rainCheck(self):
     print ("checking for new frames")
@@ -160,11 +160,11 @@ class GUI():
 
 
   def __init_gui_thread(self):
-    form = tk.Tk()
+    self.__form = tk.Tk()
     #set screen size and no border
-    form.geometry("800x480")
+    self.__form.geometry("800x480")
     #form.overrideredirect(1)
-    form.configure(bg='black')
+    self.__form.configure(bg='black')
 
     #styling
     style = ttk.Style()
@@ -210,19 +210,19 @@ class GUI():
 
     #map
     formmapimage = ImageTk.PhotoImage(self.__mapimage)
-    self.__mapImage = ttk.Label(form, image=formmapimage)
+    self.__mapImage = ttk.Label(self.__form, image=formmapimage)
     self.__mapImage.place(x=0,y=0,width=400,height=480)
 
-    ttk.Button(form, text="History", command=lambda: self.playHistory(0)).place(x=0, y=0)
+    ttk.Button(self.__form, text="History", command=lambda: self.playHistory(0)).place(x=0, y=0)
     
     #frames
-    inframe = ttk.Labelframe(form,text="Indoors", relief=tk.SOLID)
+    inframe = ttk.Labelframe(self.__form,text="Indoors", relief=tk.SOLID)
     inframe.place(x=405,y=0,width=190,height=200)
 
-    outframe = ttk.Labelframe(form,text="Outdoors", relief=tk.SOLID)
+    outframe = ttk.Labelframe(self.__form,text="Outdoors", relief=tk.SOLID)
     outframe.place(x=605,y=0,width=190,height=200)
 
-    wframe = ttk.Labelframe(form,text="Weather", relief=tk.SOLID)
+    wframe = ttk.Labelframe(self.__form,text="Weather", relief=tk.SOLID)
     wframe.place(x=405,y=205,width=390,height=130)
 
     mpframe = ttk.Labelframe(wframe,text="Moon Phase", relief=tk.FLAT, labelanchor="n")
@@ -234,7 +234,7 @@ class GUI():
     bframe = ttk.Labelframe(wframe,text="Barometer", relief=tk.FLAT, labelanchor="n")
     bframe.place(relx=0.5, relwidth=0.5, rely=0, relheight=1)
 
-    fcframe = ttk.Labelframe(form,text="Met.no Forecast", relief=tk.SOLID)
+    fcframe = ttk.Labelframe(self.__form,text="Met.no Forecast", relief=tk.SOLID)
     fcframe.place(x=405,y=345,width=390,height=130)
 
     #dynamic variables
@@ -255,7 +255,7 @@ class GUI():
     self.__forcastMain = ttk.Label(cfframe,anchor="center")
     self.__forcastMain.place(relx=0, relwidth=1, rely=0, relheight=1)
     ttk.Label(bframe,textvariable=self.__Barometer, anchor="center", style="Medium.TLabel").place(relx=0,relwidth=1.0,rely=0,relheight=1.0)
-    ttk.Label(form,textvariable=self.__RainTime, anchor="center", style="TLabel").place(relx=0.0, rely=1.0, anchor="sw")
+    ttk.Label(self.__form,textvariable=self.__RainTime, anchor="center", style="TLabel").place(relx=0.0, rely=1.0, anchor="sw")
     
     #initiate various timed updates
     self.startTimedFuncs()
@@ -264,7 +264,7 @@ class GUI():
 
     #start gui event loop
     self.ready = True
-    form.mainloop()
+    self.__form.mainloop()
 
   def playHistory(self, frame):
       frameimage = ImageTk.PhotoImage(self.__rainimages[frame][0])
@@ -273,10 +273,6 @@ class GUI():
       self.__RainTime.set(epochToTimeString(self.__rainimages[frame][1]))
       if frame < 12:
         self.__mapImage.after(200,lambda: self.playHistory(frame+1))
-
-
-  def test(self):
-    self.button.config(text=self.__weatherData.MainSensor.Temperature)
 
 
 
