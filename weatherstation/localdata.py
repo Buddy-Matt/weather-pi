@@ -103,7 +103,7 @@ class LocalData:
         return self.__bmp180_temp
     elif self.self.__bmp180_temp == None:
       return self.__dht11_temp
-    else
+    else:
       return round((self.__dht11_temp + self.__bmp180_temp) / 2,1)
 
   @property
