@@ -96,7 +96,15 @@ class LocalData:
 
   @property
   def Temp(self):
-    return round((self.__dht11_temp + self.__bmp180_temp) / 2,1)
+    if self.__dht11_temp == None:
+      if self.self.__bmp180_temp == None:
+        return None
+      else:
+        return self.__bmp180_temp
+    elif self.self.__bmp180_temp == None:
+      return self.__dht11_temp
+    else
+      return round((self.__dht11_temp + self.__bmp180_temp) / 2,1)
 
   @property
   def Pressure(self):
