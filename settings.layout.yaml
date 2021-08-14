@@ -4,3 +4,8 @@ map:
   long: 
   cropx:
   cropy:
+mqtt:
+  host:
+  username:
+  password:
+  statepath:
