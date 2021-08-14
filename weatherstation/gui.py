@@ -1,7 +1,7 @@
 import tkinter as tk
 import tksvg
 from tkinter import ttk
-import threading
+import asyncio
 from PIL import Image,ImageTk
 import requests
 from datetime import datetime
@@ -145,7 +145,7 @@ class GUI():
 
 
   def startGUI(self):
-    threading.Thread(target=self.__init_gui_thread, args=()).start()
+    asyncio.get_running_loop().run_in_executor(None, self.__init_gui_thread)
 
   def Update(self):
     if self.ready and self.__weatherData.Timestamp != None:
