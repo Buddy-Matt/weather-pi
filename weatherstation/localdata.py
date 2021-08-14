@@ -2,7 +2,6 @@ from Adafruit_BMP import BMP085
 import adafruit_dht
 import adafruit_bh1750
 import board
-import time
 import asyncio
 
 
@@ -122,6 +121,10 @@ class LocalData:
   def DataList(self):
     return {
       "Temperature": self.Temp,
+      "Temperature_Sensors": {
+        "BMP180" : self.Bmp180_Temp,
+        "DHT11": self.Dht11_Temp
+      },
       "Pressure": self.Pressure,
       "Humidity": self.Humidity,
       "Lux": self.Lux
