@@ -1,6 +1,7 @@
 from datetime import datetime
 from sensor import Sensor
 import math
+import asyncio
 
 class WeatherData:
 
@@ -12,6 +13,7 @@ class WeatherData:
     self.__remoteSensor = Sensor()
     self.__pressure = None
     self.__forecast = None
+    self.__timeoutTask = None
 
   @property
   def OnUpdate(self):
@@ -34,6 +36,17 @@ class WeatherData:
     self.Pressure = data[0x2f:0x31]
     self.Forecast = data[0x31]
 
+    if self.__onUpdate != None:
+      self.__onUpdate()
+
+    #start offline timer
+    if self.__timeoutTask != None and not self.__timeoutTask.cancelled():
+      self.__timeoutTask.cancel()
+    self.__timeoutTask = asyncio.ensure_future(self.__timeout())
+
+  async def __timeout(self):
+    await asyncio.sleep(60)
+    self.__init__()
     if self.__onUpdate != None:
       self.__onUpdate()
 

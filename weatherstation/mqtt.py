@@ -12,14 +12,11 @@ class MQTT:
     client.username_pw_set(self.__settings['username'],self.__settings['password'])
     return client
 
-  def createOnlineDict(self, topic, timeout):
+  def createOnlineDict(self, topic):
     client = self.createClient()
     client.will_set(topic,"offline",retain=True)
     return {
-      "timeoutTask": None,
-      "timeoutTime": timeout,
       "topic": topic,
-      "lastTimeStamp": None,
       "client": client
     }
 
@@ -27,9 +24,9 @@ class MQTT:
     self.__settings = Settings()['mqtt']
     self.__client = self.createClient()
     self.__statetopic = self.__settings['basetopic'] + '/state'
-    self.__weatherstationOnline = self.createOnlineDict(self.__settings['basetopic'] + '/online/weatherstation',60)
-    self.__i2cOnline = self.createOnlineDict(self.__settings['basetopic'] + '/online/i2c',60)
-    self.__dhtOnline = self.createOnlineDict(self.__settings['basetopic'] + '/online/dht',120)
+    self.__weatherstationOnline = self.createOnlineDict(self.__settings['basetopic'] + '/online/weatherstation')
+    self.__i2cOnline = self.createOnlineDict(self.__settings['basetopic'] + '/online/i2c')
+    self.__dhtOnline = self.createOnlineDict(self.__settings['basetopic'] + '/online/dht')
 
   def __startAClient(self,client):
     client.connect(self.__settings['host'])
@@ -57,13 +54,4 @@ class MQTT:
 
 
   def CheckSetOnline(self, payloadTimeStamp, onlineDict):
-    if payloadTimeStamp != None and (onlineDict["lastTimeStamp"] == None or onlineDict["lastTimeStamp"] < payloadTimeStamp):
-      onlineDict["lastTimeStamp"] = payloadTimeStamp
-      onlineDict["client"].publish(onlineDict["topic"],"online",retain=True)
-      if onlineDict["timeoutTask"] != None and not onlineDict["timeoutTask"].cancelled():
-        onlineDict["timeoutTask"].cancel()
-      onlineDict["timeoutTask"] = asyncio.ensure_future(self.Timeout(onlineDict))
-
-  async def Timeout(self, onlineDict):
-    await asyncio.sleep(onlineDict["timeoutTime"])
-    onlineDict["client"].publish(onlineDict["topic"],"offline",retain=True)
+    onlineDict["client"].publish(onlineDict["topic"],"online" if payloadTimeStamp != None else "offline",retain=True)

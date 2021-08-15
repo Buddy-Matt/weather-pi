@@ -3,7 +3,7 @@ import adafruit_dht
 import adafruit_bh1750
 import board
 import asyncio
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class LocalData:
 
@@ -11,13 +11,27 @@ class LocalData:
     self.__bmp = BMP085.BMP085(mode=BMP085.BMP085_ULTRAHIGHRES) #ULTRAHIGHRES mode as we're not taking many samples
     self.__dht = adafruit_dht.DHT11(board.D4)
     self.__bh = adafruit_bh1750.BH1750(board.I2C())
-    self.__bmp180_temp = None
-    self.__bmp180_pressure = None
+    self.__dhtTimeout = {
+      "task": None,
+      "resetFunc": self.__initDHT,
+      "delay": 120
+    }
+    self.__i2cTimeout = {
+      "task": None,
+      "resetFunc": self.__initI2C,
+      "delay": 60
+    }
+
+  def __initDHT(self):
     self.__dht11_temp = None
     self.__dht11_humidity = None
+    self.__dht_timestamp = None
+
+  def __initI2C(self):
+    self.__bmp180_temp = None
+    self.__bmp180_pressure = None
     self.__bh1750_lux = None
     self.__i2c_timestamp = None
-    self.__dht_timestamp = None
 
   @property
   def OnUpdate(self):
@@ -27,6 +41,17 @@ class LocalData:
   def OnUpdate(self, func):
     self.__onUpdate = func
 
+  def __resetTimeout(self,dict):
+    if dict["task"] != None and not dict["task"].cancelled():
+      dict["task"].cancel()
+    dict["task"] = asyncio.ensure_future(self.__timeout(dict))
+
+  async def __timeout(self,dict):
+    await asyncio.sleep(dict["delay"])
+    dict["resetFunc"]()
+    if self.__onUpdate != None:
+      self.__onUpdate()
+
   async def __poll(self):
     while True:
       try:
@@ -34,9 +59,15 @@ class LocalData:
         self.__bmp180_pressure = self.__bmp.read_pressure()
         self.__bh1750_lux = self.__bh.lux
         self.__i2c_timestamp = datetime.now()
+        self.__resetTimeout(self.__i2cTimeout)
+      except:
+        pass
+
+      try:
         self.__dht11_temp = self.__dht.temperature
         self.__dht11_humidity= self.__dht.humidity
         self.__dht_timestamp = datetime.now()
+        self.__resetTimeout(self.__dhtTimeout)
       except:
         pass
 
