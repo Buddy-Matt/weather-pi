@@ -3,7 +3,7 @@ import adafruit_dht
 import adafruit_bh1750
 import board
 import asyncio
-
+from datetime import datetime
 
 class LocalData:
 
@@ -16,7 +16,8 @@ class LocalData:
     self.__dht11_temp = None
     self.__dht11_humidity = None
     self.__bh1750_lux = None
-
+    self.__i2c_timestamp = None
+    self.__dht_timestamp = None
 
   @property
   def OnUpdate(self):
@@ -32,8 +33,10 @@ class LocalData:
         self.__bmp180_temp = self.__bmp.read_temperature()
         self.__bmp180_pressure = self.__bmp.read_pressure()
         self.__bh1750_lux = self.__bh.lux
+        self.__i2c_timestamp = datetime.now()
         self.__dht11_temp = self.__dht.temperature
         self.__dht11_humidity= self.__dht.humidity
+        self.__dht_timestamp = datetime.now()
       except:
         pass
 
@@ -120,6 +123,8 @@ class LocalData:
   @property
   def DataList(self):
     return {
+      "I2C_TimeStamp": self.__i2c_timestamp,
+      "DHT_TimeStamp": self.__dht_timestamp,
       "Temperature": self.Temp,
       "Temperature_Sensors": {
         "BMP180" : self.Bmp180_Temp,
