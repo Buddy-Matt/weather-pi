@@ -45,6 +45,7 @@ localdata.OnUpdate = dispatchUpdate
 #main loop
 async def main():
   gui.startGUI()
+  mqtt.StartClient()
   await udphandler.startListening()
   await httpserver.startServer()
   localdata.startPolling()
