@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from __future__ import print_function
 import asyncio
 from udphandler import UDPHandler
 from httpserver import HTTPServer
@@ -11,11 +10,11 @@ import sys
 import builtins
 
 #print now flushes
+builtins._print = builtins.print
 def fprint(*args, **kwargs):
-  ret = _print(*args, **kwargs)
+  ret = builtins._print(*args, **kwargs)
   sys.stdout.flush()
   return ret
-builtins._print = builtins.print
 builtins.print = fprint
 
 
