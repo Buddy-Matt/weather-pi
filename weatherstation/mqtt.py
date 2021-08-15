@@ -40,6 +40,7 @@ class MQTT:
     self.__startAClient(self.__weatherstationOnline['client'])
     self.__startAClient(self.__i2cOnline['client'])
     self.__startAClient(self.__dhtOnline['client'])
+    print('MQTT Running')
 
 
   def SendState(self, data):
@@ -56,24 +57,13 @@ class MQTT:
 
 
   def CheckSetOnline(self, payloadTimeStamp, onlineDict):
-    print(onlineDict['topic'])
-    print("Last TS: " + str(onlineDict["lastTimeStamp"]))
-    print("This TS: " + str(payloadTimeStamp))
-
     if payloadTimeStamp != None and (onlineDict["lastTimeStamp"] == None or onlineDict["lastTimeStamp"] < payloadTimeStamp):
-      print('online')
       onlineDict["lastTimeStamp"] = payloadTimeStamp
       onlineDict["client"].publish(onlineDict["topic"],"online",retain=True)
       if onlineDict["timeoutTask"] != None and not onlineDict["timeoutTask"].cancelled():
         onlineDict["timeoutTask"].cancel()
       onlineDict["timeoutTask"] = asyncio.ensure_future(self.Timeout(onlineDict))
 
-
-
-
   async def Timeout(self, onlineDict):
-    print('a')
     await asyncio.sleep(onlineDict["timeoutTime"])
-    print(onlineDict['topic'])
-    print('offline')
     onlineDict["client"].publish(onlineDict["topic"],"offline",retain=True)
