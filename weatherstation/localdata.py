@@ -16,11 +16,13 @@ class LocalData:
       "resetFunc": self.__initDHT,
       "delay": 120
     }
+    self.__initDHT()
     self.__i2cTimeout = {
       "task": None,
       "resetFunc": self.__initI2C,
       "delay": 60
     }
+    self.__initI2C()
 
   def __initDHT(self):
     self.__dht11_temp = None
@@ -56,7 +58,7 @@ class LocalData:
     while True:
       try:
         self.__bmp180_temp = self.__bmp.read_temperature()
-        self.__bmp180_pressure = self.__bmp.read_pressure()
+        self.__bmp180_pressure = self.__bmp.read_pressure() / 100.0
         self.__bh1750_lux = self.__bh.lux
         self.__i2c_timestamp = datetime.now()
         self.__resetTimeout(self.__i2cTimeout)

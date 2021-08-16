@@ -1,5 +1,5 @@
 map:
-  zoom:
+  zoom: 9
   lat:
   long: 
   cropx:
@@ -8,4 +8,5 @@ mqtt:
   host:
   username:
   password:
-  statepath:
+  basetopic: weatherPi
+  tempsensor: i2c/dht/avg
