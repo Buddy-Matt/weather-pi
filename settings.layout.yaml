@@ -10,3 +10,4 @@ mqtt:
   password:
   basetopic: weatherPi
   tempsensor: i2c/dht/avg
+  hatopic: homeassistant
