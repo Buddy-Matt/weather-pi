@@ -1,5 +1,5 @@
 map:
-  zoom: 9
+  zoom:
   lat:
   long: 
   cropx:
@@ -10,4 +10,3 @@ mqtt:
   password:
   basetopic: weatherPi
   tempsensor: i2c/dht/avg
-  hatopic: homeassistant

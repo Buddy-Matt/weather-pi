@@ -20,3 +20,5 @@ install('adafruit-circuitpython-bh1750')
 install('get-mac')
 
 #subprocess.check_call(["git","clone","https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code.git","extlib/"])
+
+print('Please also apt install libgpiod2')

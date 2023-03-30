@@ -45,7 +45,7 @@ class WeatherData:
     self.__timeoutTask = asyncio.ensure_future(self.__timeout())
 
   async def __timeout(self):
-    await asyncio.sleep(60)
+    await asyncio.sleep(120)
     self.__init__()
     if self.__onUpdate != None:
       self.__onUpdate()

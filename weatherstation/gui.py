@@ -56,8 +56,8 @@ def grabImages(target,preXYurl,postXYurl):
   for x in range(0,2):
     for y in range(-1,2):
       url = "%s%s/%s/%s%s" % (preXYurl, target[2], target[0] + x, target[1] + y, postXYurl)
-#      print("Grabbing %s" % url)
-      tile = Image.open(requests.get(url, stream=True).raw)
+      #print("Grabbing %s" % url)
+      tile = Image.open(requests.get(url, headers={'User-Agent': 'WeatherPI'}, stream=True).raw)
       finalimage.paste(tile,(x*256,(y+1)*256))
 
   return finalimage
@@ -199,7 +199,7 @@ class GUI():
     'NEW_MOON': tksvg.SvgImage(file="weatherstation/img/moon-new.svg", scaletoheight=80),
     'WAXING_CRESCENT': tksvg.SvgImage(file="weatherstation/img/moon-waxing.svg", scaletoheight=80),
     'FIRST_QUARTER': tksvg.SvgImage(file="weatherstation/img/moon-waxing-quarter.svg", scaletoheight=80),
-    'WAXING_GIBOUS': tksvg.SvgImage(file="weatherstation/img/moon-waxing-gibbous.svg", scaletoheight=80),
+    'WAXING_GIBBOUS': tksvg.SvgImage(file="weatherstation/img/moon-waxing-gibbous.svg", scaletoheight=80),
     'FULL_MOON': tksvg.SvgImage(file="weatherstation/img/moon-full.svg", scaletoheight=80),
     'WANING_GIBBOUS': tksvg.SvgImage(file="weatherstation/img/moon-waning-gibbous.svg", scaletoheight=80),
     'LAST_QUARTER': tksvg.SvgImage(file="weatherstation/img/moon-waning-quarter.svg", scaletoheight=80),

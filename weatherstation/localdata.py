@@ -74,7 +74,7 @@ class LocalData:
         pass
 
       if self.__onUpdate != None:
-        self.__onUpdate()      
+        self.__onUpdate()
 
       await asyncio.sleep(30)
 
