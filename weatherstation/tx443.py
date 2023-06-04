@@ -57,6 +57,6 @@ async def send (msg):
     await highFor(500)
     await lowFor(80000)
 
-def encodeAndSend(temp, humid):
+async def encodeAndSend(temp, humid):
   msg = encode(0XFF,0,temp,humid,2)
-  send (msg)
+  await send(msg)
