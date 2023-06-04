@@ -37,7 +37,7 @@ def lowFor(dur):
   libc.usleep(dur)
 
 def send (msg):
-  for i in range(5):
+  for i in range(6):
     lowFor(16000)
 
     for j in range(4):
