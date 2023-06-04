@@ -14,20 +14,20 @@ class SwitchBot:
   async def __poll(self):
     while True:
       d = await BleakScanner.find_device_by_address('D5:5D:7C:31:DD:D5')
-      print("SwitchBot data received")
-      ba = d.details['props']['ManufacturerData'][2409]
-      self.__battery = ba[7] & 127
-      self.__temp = (ba[9] - 128) + (ba[8] / 10)
-      self.__humidity = ba[10]
-      self.__timestamp = datetime.now()
-      if self.__onUpdate != None:
-        self.__onUpdate()
+      if d:
+        print("SwitchBot data received")
+        ba = d.details['props']['ManufacturerData'][2409]
+        self.__battery = ba[7] & 127
+        self.__temp = (ba[9] - 128) + (ba[8] / 10)
+        self.__humidity = ba[10]
+        self.__timestamp = datetime.now()
+        if self.__onUpdate != None:
+          self.__onUpdate()
 
-      #start offline timer
-      if self.__timeoutTask != None and not self.__timeoutTask.cancelled():
-        self.__timeoutTask.cancel()
-      self.__timeoutTask = asyncio.ensure_future(self.__timeout())
-
+        #start offline timer
+        if self.__timeoutTask != None and not self.__timeoutTask.cancelled():
+          self.__timeoutTask.cancel()
+        self.__timeoutTask = asyncio.ensure_future(self.__timeout())
       await asyncio.sleep(29)
 
   async def __timeout(self):
