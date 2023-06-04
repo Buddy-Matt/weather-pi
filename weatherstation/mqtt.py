@@ -206,7 +206,7 @@ class MQTT:
         "value_template": "{{ value_json.Digoo.RemoteSensor.Humidity }}",
         "unit_of_measurement": "%"
       }
-      self.__client.publish(self.__settings['hatopic'] + "/sensor/switchbot/humidity/config", json.dumps(Payload), retain=True)
+      self.__client.publish(self.__settings['hatopic'] + "/sensor/digoo/outsidehumidity/config", json.dumps(Payload), retain=True)
       Payload = {
         "unique_id": getmac.get_mac_address() + ":switchbot:temperature",
         "name": "SwitchBot Temperature",
@@ -242,7 +242,7 @@ class MQTT:
         "value_template": "{{ value_json.SwitchBot.Humidity }}",
         "unit_of_measurement": "%"
       }
-      self.__client.publish(self.__settings['hatopic'] + "/sensor/switchbot/temperature/config", json.dumps(Payload), retain=True)
+      self.__client.publish(self.__settings['hatopic'] + "/sensor/switchbot/humidity/config", json.dumps(Payload), retain=True)
 
 
 
