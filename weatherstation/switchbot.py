@@ -22,7 +22,7 @@ class SwitchBot:
         self.__humidity = ba[10]
         self.__timestamp = datetime.now()
         if self.__onUpdate != None:
-          self.__onUpdate()
+          await self.__onUpdate()
 
         #start offline timer
         if self.__timeoutTask != None and not self.__timeoutTask.cancelled():
