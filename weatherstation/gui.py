@@ -130,7 +130,7 @@ class GUI():
 
   def startTimedFuncs(self):
     self.__moonPhase.after(50, lambda: self.moonCheck())
-    #self.__mapImage.after(1000, lambda: self.rainCheck())
+    self.__mapImage.after(1000, lambda: self.rainCheck())
 
   def rainCheck(self):
     print ("checking for new frames")
