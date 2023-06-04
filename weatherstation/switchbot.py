@@ -34,7 +34,7 @@ class SwitchBot:
     await asyncio.sleep(120)
     self.__init__()
     if self.__onUpdate != None:
-      self.__onUpdate()      
+      await self.__onUpdate()      
 
   def startPolling(self):
     self.__loop = asyncio.get_running_loop()

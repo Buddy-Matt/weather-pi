@@ -45,8 +45,8 @@ def dispatchUpdate():
     "SwitchBot": switchbot.DataList
   }) 
 
-def sbUpdate():
-  asyncio.run(encodeAndSend(switchbot.Temp,switchbot.Humidity))
+async def sbUpdate():
+  await encodeAndSend(switchbot.Temp,switchbot.Humidity)
   dispatchUpdate()
 
 curWeather.OnUpdate = dispatchUpdate
