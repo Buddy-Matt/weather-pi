@@ -58,8 +58,8 @@ def send (msg):
     highFor(500)
     lowFor(80000)
 
-async def encodeAndSend(temp, humid):
+def encodeAndSend(temp, humid):
   msg = encode(0XFD,0,temp,humid,2)
   print ('Sending 443Mhz Packet: ' + ' '.join('{:02x}'.format(x) for x in msg))
-  await send(msg)
+  send(msg)
   print ('Sent')
