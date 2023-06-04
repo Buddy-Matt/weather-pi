@@ -45,8 +45,8 @@ def dispatchUpdate():
     "SwitchBot": switchbot.DataList
   }) 
 
-async def sbUpdate():
-  await encodeAndSend(switchbot.Temp,switchbot.Humidity)
+def sbUpdate():
+  encodeAndSend(switchbot.Temp,switchbot.Humidity)
   dispatchUpdate()
 
 curWeather.OnUpdate = dispatchUpdate

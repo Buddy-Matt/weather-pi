@@ -22,7 +22,7 @@ class SwitchBot:
         self.__humidity = ba[10]
         self.__timestamp = datetime.now()
         if self.__onUpdate != None:
-          await self.__onUpdate()
+          self.__onUpdate()
 
         #start offline timer
         if self.__timeoutTask != None and not self.__timeoutTask.cancelled():
@@ -34,7 +34,7 @@ class SwitchBot:
     await asyncio.sleep(120)
     self.__init__()
     if self.__onUpdate != None:
-      await self.__onUpdate()      
+      self.__onUpdate()      
 
   def startPolling(self):
     self.__loop = asyncio.get_running_loop()

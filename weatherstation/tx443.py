@@ -1,5 +1,6 @@
 import math
-import asyncio
+import ctypes
+libc = ctypes.CDLL('libc.so.6')
 import RPi.GPIO as GPIO
 
 gpioPin = 24
@@ -27,36 +28,38 @@ def encode (id,flags, temp, humid, chan):
   msgBytes[1] = (checksum(msgBytes) << 4) |  (msgBytes[1] & 0x0F)
   return msgBytes
 
-async def highFor(dur):
+def highFor(dur):
   GPIO.output(gpioPin, GPIO.HIGH)
-  await asyncio.sleep(dur/1000000)
+  libc.usleep(dur)
 
-async def lowFor(dur):
+def lowFor(dur):
   GPIO.output(gpioPin, GPIO.LOW)
-  await asyncio.sleep(dur/1000000)
+  libc.usleep(dur)
 
-async def send (msg):
+def send (msg):
   for i in range(5):
-    await lowFor(16000)
+    lowFor(16000)
 
     for j in range(4):
-      await highFor(1000)
-      await lowFor(1000)
+      highFor(1000)
+      lowFor(1000)
 
-    await highFor(500)
-    await lowFor(8000)
+    highFor(500)
+    lowFor(8000)
 
     for byte in msg:
       for bitNo in range(8):
-        await highFor(500)
+        highFor(500)
         if (byte >> (7-bitNo)) & 0x01:
-          await lowFor(4000)
+          lowFor(4000)
         else:
-          await lowFor(2000)
+          lowFor(2000)
 
-    await highFor(500)
-    await lowFor(80000)
+    highFor(500)
+    lowFor(80000)
 
 async def encodeAndSend(temp, humid):
-  msg = encode(0XFF,0,temp,humid,2)
+  msg = encode(0XFD,0,temp,humid,2)
+  print ('Sending 443Mhz Packet: ' + ' '.join('{:02x}'.format(x) for x in msg))
   await send(msg)
+  print ('Sent')
