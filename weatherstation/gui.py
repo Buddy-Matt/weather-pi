@@ -56,7 +56,7 @@ def grabImages(target,preXYurl,postXYurl):
   for x in range(0,2):
     for y in range(-1,2):
       url = "%s%s/%s/%s%s" % (preXYurl, target[2], target[0] + x, target[1] + y, postXYurl)
-      #print("Grabbing %s" % url)
+      print("Grabbing %s" % url)
       tile = Image.open(requests.get(url, headers={'User-Agent': 'WeatherPI'}, stream=True).raw)
       finalimage.paste(tile,(x*256,(y+1)*256))
 
@@ -77,10 +77,11 @@ def nextMidnight():
 
 
 class GUI():
-  def __init__(self, digooData, localData):
+  def __init__(self, digooData, localData, switchbot):
     self.ready = False
     self.__digooData = digooData
     self.__localData = localData
+    self.__switchbot = switchbot
     settings = Settings()['map']
 
 
@@ -129,7 +130,7 @@ class GUI():
 
   def startTimedFuncs(self):
     self.__moonPhase.after(50, lambda: self.moonCheck())
-    self.__mapImage.after(1000, lambda: self.rainCheck())
+    #self.__mapImage.after(1000, lambda: self.rainCheck())
 
   def rainCheck(self):
     print ("checking for new frames")
@@ -148,20 +149,21 @@ class GUI():
     asyncio.get_running_loop().run_in_executor(None, self.__init_gui_thread)
 
   def Update(self):
-    if self.ready and self.__digooData.Timestamp != None:
+    if self.ready:# and self.__digooData.Timestamp != None:
 #      self.__InsideTemp.set("%.1f°C" % self.__digooData.MainSensor.Temperature)
 #      self.__InsideHumid.set("%i%%" % self.__digooData.MainSensor.Humidity)
 #      self.__OutsideTemp.set("%.1f°C" % self.__digooData.RemoteSensor.Temperature)
 #      self.__OutsideHumid.set("%i%%" % self.__digooData.RemoteSensor.Humidity)
-      self.__InsideTemp.set("%.1f°C" % self.__localData.Temp)
-      self.__InsideHumid.set("%i%%" % self.__localData.Humidity)
-      self.__OutsideTemp.set("%.1f°C" % self.__digooData.RemoteSensor.Temperature)
-      self.__OutsideHumid.set("%i%%" % self.__digooData.RemoteSensor.Humidity)
+      self.__InsideTemp.set("%.1f°C" % (self.__localData.Temp or 0))
+      self.__InsideHumid.set("%i%%" % (self.__localData.Humidity or 0))
+      self.__OutsideTemp.set("%.1f°C" % (self.__switchbot.Temp or 0))
+      self.__OutsideHumid.set("%i%%" % (self.__switchbot.Humidity or 0))
 
-      self.__Barometer.set("%ihPa" % self.__digooData.Pressure )
-      weathericon = self.__iconsBig[self.__digooData.RawForecast]
-      self.__forcastMain.configure(image=weathericon)
-      self.__forcastMain.image = weathericon
+      if self.__digooData.Timestamp != None:
+        self.__Barometer.set("%ihPa" % self.__digooData.Pressure )
+        weathericon = self.__iconsBig[self.__digooData.RawForecast]
+        self.__forcastMain.configure(image=weathericon)
+        self.__forcastMain.image = weathericon
 
 
   def __init_gui_thread(self):

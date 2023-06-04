@@ -3,6 +3,7 @@ import asyncio
 from udphandler import UDPHandler
 from httpserver import HTTPServer
 from digoodata import DigooData
+from switchbot import SwitchBot
 from mqtt import MQTT
 from gui import GUI
 from localdata import LocalData
@@ -28,8 +29,10 @@ udphandler = UDPHandler(curWeather)
 httpserver = HTTPServer(curWeather)
 #local weather instance
 localdata = LocalData()
+#switchbot thermohygrometer bluetooth instance
+switchbot = SwitchBot()
 #GUI For display
-gui = GUI(curWeather,localdata)
+gui = GUI(curWeather,localdata, switchbot)
 #MQTT For reporting
 mqtt = MQTT()
 
@@ -37,10 +40,12 @@ def dispatchUpdate():
   gui.Update()
   mqtt.SendState({
     "Digoo": curWeather.DataList,
-    "Local": localdata.DataList
+    "Local": localdata.DataList,
+    "SwitchBot": switchbot.DataList
   })  
 curWeather.OnUpdate = dispatchUpdate
 localdata.OnUpdate = dispatchUpdate
+switchbot.OnUpdate = dispatchUpdate
 
 #main loop
 async def main():
@@ -49,6 +54,7 @@ async def main():
   await udphandler.startListening()
   await httpserver.startServer()
   localdata.startPolling()
+  switchbot.startPolling()
   print("Initilisation complete")
   #keep on chugging forever
   await asyncio.Event().wait()

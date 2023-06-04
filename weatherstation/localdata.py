@@ -3,14 +3,16 @@ import adafruit_dht
 import adafruit_bh1750
 import board
 import asyncio
+from settings import Settings
 from datetime import datetime, timedelta
 
 class LocalData:
 
   def __init__(self):
-    self.__bmp = BMP085.BMP085(mode=BMP085.BMP085_ULTRAHIGHRES) #ULTRAHIGHRES mode as we're not taking many samples
-    self.__dht = adafruit_dht.DHT11(board.D4)
-    self.__bh = adafruit_bh1750.BH1750(board.I2C())
+    if Settings()['localdata'] != False:
+      self.__bmp = BMP085.BMP085(mode=BMP085.BMP085_ULTRAHIGHRES) #ULTRAHIGHRES mode as we're not taking many samples
+      self.__dht = adafruit_dht.DHT11(board.D4)
+      self.__bh = adafruit_bh1750.BH1750(board.I2C())
     self.__dhtTimeout = {
       "task": None,
       "resetFunc": self.__initDHT,
@@ -80,8 +82,9 @@ class LocalData:
 
 
   def startPolling(self):
-    self.__loop = asyncio.get_running_loop()
-    self.__loop.create_task(self.__poll())
+    if Settings()['localdata'] != False:
+      self.__loop = asyncio.get_running_loop()
+      self.__loop.create_task(self.__poll())
 
   @property
   def Bmp180_Temp(self):

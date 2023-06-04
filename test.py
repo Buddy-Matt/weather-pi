@@ -1,8 +1,17 @@
-#!/usr/bin/python3
-import socket
+import asyncio
+from bleak import BleakScanner
 
-data = b'<W\x01i\xf0q\x10\x01\x00\x019\x00\x02\r\x15\x07\x1f\x0f6V\x01X\x06?Z\x06A;\x06;B\x06?W\x06C?\x06=\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\x00\x00\xed\x03\x10\xff\xff\xff\xff\xff\xff\xff\xd9>'
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.sendto(data,('localhost',17000))
+async def main():
+    while True:
+      d = await BleakScanner.find_device_by_address('D5:5D:7C:31:DD:D5')
+      sd=d.details['props']['ServiceData']['0000fd3d-0000-1000-8000-00805f9b34fb']
+      print(''.join('{:02x}'.format(x) for x in sd))
+      ba = d.details['props']['ManufacturerData'][2409]
+      print(ba)
+      print(''.join('{:02x}'.format(x) for x in ba))
+      print(ba[9] - 128)
+      print(ba[8])
+      print(ba[10])
+      await asyncio.sleep(29)
 
-
+asyncio.run(main())

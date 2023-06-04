@@ -26,6 +26,7 @@ class MQTT:
     self.__weatherstationOnline = self.createOnlineDict(self.__settings['basetopic'] + '/online/weatherstation')
     self.__i2cOnline = self.createOnlineDict(self.__settings['basetopic'] + '/online/i2c')
     self.__dhtOnline = self.createOnlineDict(self.__settings['basetopic'] + '/online/dht')
+    self.__switchbotOnline = self.createOnlineDict(self.__settings['basetopic'] + '/online/switchbot')
 
   def __startAClient(self,client):
     client.connect(self.__settings['host'])
@@ -205,7 +206,43 @@ class MQTT:
         "value_template": "{{ value_json.Digoo.RemoteSensor.Humidity }}",
         "unit_of_measurement": "%"
       }
-      self.__client.publish(self.__settings['hatopic'] + "/sensor/digoo/outsidehumidity/config", json.dumps(Payload), retain=True)
+      self.__client.publish(self.__settings['hatopic'] + "/sensor/switchbot/humidity/config", json.dumps(Payload), retain=True)
+      Payload = {
+        "unique_id": getmac.get_mac_address() + ":switchbot:temperature",
+        "name": "SwitchBot Temperature",
+        "availability_topic": self.__switchbotOnline["topic"],
+        "device": {
+          "manufacturer":"SwitchBot",
+          "model":"Indoor/Outdoor Thermo-Hygrometer",
+          "name":"SwitchBot Indoor/Outdoor Thermo-Hygrometer",
+          "identifiers":[getmac.get_mac_address() + ":switchbot"],
+          "via_device": getmac.get_mac_address()
+        },
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "state_topic": self.__settings['basetopic'] + '/state',
+        "value_template": "{{ value_json.SwitchBot.Temperature }}",
+        "unit_of_measurement": "°C"
+      }
+      self.__client.publish(self.__settings['hatopic'] + "/sensor/switchbot/temperature/config", json.dumps(Payload), retain=True)
+      Payload = {
+        "unique_id": getmac.get_mac_address() + ":switchbot:humidity",
+        "name": "SwitchBot Humidity",
+        "availability_topic": self.__switchbotOnline["topic"],
+        "device": {
+          "manufacturer":"SwitchBot",
+          "model":"Indoor/Outdoor Thermo-Hygrometer",
+          "name":"SwitchBot Indoor/Outdoor Thermo-Hygrometer",
+          "identifiers":[getmac.get_mac_address() + ":switchbot"],
+          "via_device": getmac.get_mac_address()
+        },
+        "device_class": "humidity",
+        "state_class": "measurement",
+        "state_topic": self.__settings['basetopic'] + '/state',
+        "value_template": "{{ value_json.SwitchBot.Humidity }}",
+        "unit_of_measurement": "%"
+      }
+      self.__client.publish(self.__settings['hatopic'] + "/sensor/switchbot/temperature/config", json.dumps(Payload), retain=True)
 
 
 
@@ -215,6 +252,7 @@ class MQTT:
       self.__startAClient(self.__weatherstationOnline['client'])
       self.__startAClient(self.__i2cOnline['client'])
       self.__startAClient(self.__dhtOnline['client'])
+      self.__startAClient(self.__switchbotOnline['client'])
       self.__registerHA()
     except Exception as e:
       print(e)
@@ -226,10 +264,13 @@ class MQTT:
     self.CheckSetOnline(data['Digoo']['TimeStamp'],self.__weatherstationOnline)
     self.CheckSetOnline(data['Local']['I2C_TimeStamp'],self.__i2cOnline)
     self.CheckSetOnline(data['Local']['DHT_TimeStamp'],self.__dhtOnline)
+    self.CheckSetOnline(data['SwitchBot']['TimeStamp'],self.__switchbotOnline)
 
     del data['Digoo']['TimeStamp']
     del data['Local']['I2C_TimeStamp']
     del data['Local']['DHT_TimeStamp']
+    del data['SwitchBot']['TimeStamp']
+
     packet = json.dumps(data)
 
     self.__client.publish(self.__statetopic,packet,0)
