@@ -1,5 +1,5 @@
 import socket
-from weatherdata import WeatherData
+from digoodata import DigooData
 import os
 import asyncio
 import sys
@@ -30,8 +30,8 @@ class UDPHandler():
 
 
 
-  def __init__(self,weatherData: WeatherData):
-    self.__weatherData = weatherData
+  def __init__(self,digooData: DigooData):
+    self.__digooData = digooData
     self.__onUpdate = None
 
   async def startListening(self):
@@ -40,6 +40,6 @@ class UDPHandler():
     print("server created")
 
   def decode_weather(self, data: bytearray):
-    print("Weather data received")
-    self.__weatherData.Update(data)
+    print("Digoo data received")
+    self.__digooData.Update(data)
 

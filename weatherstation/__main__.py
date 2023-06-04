@@ -2,7 +2,7 @@
 import asyncio
 from udphandler import UDPHandler
 from httpserver import HTTPServer
-from weatherdata import WeatherData
+from digoodata import DigooData
 from mqtt import MQTT
 from gui import GUI
 from localdata import LocalData
@@ -21,7 +21,7 @@ builtins.print = fprint
 
 print("WeatherPi Starting")
 #shared weather instance
-curWeather = WeatherData()
+curWeather = DigooData()
 #udp handler - for getting updates from the real weather station
 udphandler = UDPHandler(curWeather)
 #http sever - currently unused. May serve up JSON data at some point

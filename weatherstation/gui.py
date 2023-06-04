@@ -149,10 +149,15 @@ class GUI():
 
   def Update(self):
     if self.ready and self.__weatherData.Timestamp != None:
-      self.__InsideTemp.set("%.1f°C" % self.__weatherData.MainSensor.Temperature)
-      self.__InsideHumid.set("%i%%" % self.__weatherData.MainSensor.Humidity)
-      self.__OutsideTemp.set("%.1f°C" % self.__weatherData.RemoteSensor.Temperature)
-      self.__OutsideHumid.set("%i%%" % self.__weatherData.RemoteSensor.Humidity)
+#      self.__InsideTemp.set("%.1f°C" % self.__weatherData.MainSensor.Temperature)
+#      self.__InsideHumid.set("%i%%" % self.__weatherData.MainSensor.Humidity)
+#      self.__OutsideTemp.set("%.1f°C" % self.__weatherData.RemoteSensor.Temperature)
+#      self.__OutsideHumid.set("%i%%" % self.__weatherData.RemoteSensor.Humidity)
+     self.__InsideTemp.set("%.1f°C" % self.__localData.Temp)
+     self.__InsideHumid.set("%i%%" % self.__localData.Humidity)
+     self.__OutsideTemp.set("%.1f°C" % self.__weatherData.RemoteSensor.Temperature)
+     self.__OutsideHumid.set("%i%%" % self.__weatherData.RemoteSensor.Humidity)
+
       self.__Barometer.set("%ihPa" % self.__weatherData.Pressure )
       weathericon = self.__iconsBig[self.__weatherData.RawForecast]
       self.__forcastMain.configure(image=weathericon)

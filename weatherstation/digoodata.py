@@ -3,7 +3,7 @@ from sensor import Sensor
 import math
 import asyncio
 
-class WeatherData:
+class DigooData:
 
   def __init__(self):
     self.__timestamp = None
