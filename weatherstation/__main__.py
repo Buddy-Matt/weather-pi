@@ -9,6 +9,7 @@ from gui import GUI
 from localdata import LocalData
 import sys
 import builtins
+from tx443 import encodeAndSend
 
 #print now flushes
 builtins._print = builtins.print
@@ -42,10 +43,15 @@ def dispatchUpdate():
     "Digoo": curWeather.DataList,
     "Local": localdata.DataList,
     "SwitchBot": switchbot.DataList
-  })  
+  }) 
+
+def sbUpdate():
+  encodeAndSend(switchbot.Temp,switchbot.Humidity)
+  dispatchUpdate()
+
 curWeather.OnUpdate = dispatchUpdate
 localdata.OnUpdate = dispatchUpdate
-switchbot.OnUpdate = dispatchUpdate
+switchbot.OnUpdate = sbUpdate
 
 #main loop
 async def main():
