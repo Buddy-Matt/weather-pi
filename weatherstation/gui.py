@@ -77,9 +77,9 @@ def nextMidnight():
 
 
 class GUI():
-  def __init__(self, weatherData, localData):
+  def __init__(self, digooData, localData):
     self.ready = False
-    self.__weatherData = weatherData
+    self.__digooData = digooData
     self.__localData = localData
     settings = Settings()['map']
 
@@ -148,18 +148,18 @@ class GUI():
     asyncio.get_running_loop().run_in_executor(None, self.__init_gui_thread)
 
   def Update(self):
-    if self.ready and self.__weatherData.Timestamp != None:
-#      self.__InsideTemp.set("%.1f°C" % self.__weatherData.MainSensor.Temperature)
-#      self.__InsideHumid.set("%i%%" % self.__weatherData.MainSensor.Humidity)
-#      self.__OutsideTemp.set("%.1f°C" % self.__weatherData.RemoteSensor.Temperature)
-#      self.__OutsideHumid.set("%i%%" % self.__weatherData.RemoteSensor.Humidity)
-     self.__InsideTemp.set("%.1f°C" % self.__localData.Temp)
-     self.__InsideHumid.set("%i%%" % self.__localData.Humidity)
-     self.__OutsideTemp.set("%.1f°C" % self.__weatherData.RemoteSensor.Temperature)
-     self.__OutsideHumid.set("%i%%" % self.__weatherData.RemoteSensor.Humidity)
+    if self.ready and self.__digooData.Timestamp != None:
+#      self.__InsideTemp.set("%.1f°C" % self.__digooData.MainSensor.Temperature)
+#      self.__InsideHumid.set("%i%%" % self.__digooData.MainSensor.Humidity)
+#      self.__OutsideTemp.set("%.1f°C" % self.__digooData.RemoteSensor.Temperature)
+#      self.__OutsideHumid.set("%i%%" % self.__digooData.RemoteSensor.Humidity)
+      self.__InsideTemp.set("%.1f°C" % self.__localData.Temp)
+      self.__InsideHumid.set("%i%%" % self.__localData.Humidity)
+      self.__OutsideTemp.set("%.1f°C" % self.__digooData.RemoteSensor.Temperature)
+      self.__OutsideHumid.set("%i%%" % self.__digooData.RemoteSensor.Humidity)
 
-      self.__Barometer.set("%ihPa" % self.__weatherData.Pressure )
-      weathericon = self.__iconsBig[self.__weatherData.RawForecast]
+      self.__Barometer.set("%ihPa" % self.__digooData.Pressure )
+      weathericon = self.__iconsBig[self.__digooData.RawForecast]
       self.__forcastMain.configure(image=weathericon)
       self.__forcastMain.image = weathericon
 

@@ -1,13 +1,13 @@
 from aiohttp import web
-from weatherdata import WeatherData
+from digoodata import DigooData
 
 class HTTPServer:
-  def __init__(self,weatherData: WeatherData):
-    self.__weatherData = weatherData
+  def __init__(self,digooData: DigooData):
+    self.__digooData = digooData
     
 
   async def hello(self,request):
-      return web.Response(text="Temperature: %.1f°C" % self.__weatherData.MainSensor.Temperature)
+      return web.Response(text="Temperature: %.1f°C" % self.__digooData.MainSensor.Temperature)
 
 
   async def startServer(self):
