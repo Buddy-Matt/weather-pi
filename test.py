@@ -7,8 +7,6 @@ async def main():
       for d in devices:
           print(d)
           if d.address == 'D5:5D:7C:31:DD:D5':
-            sd=d.details['props']['ServiceData']['0000fd3d-0000-1000-8000-00805f9b34fb']
-            print(''.join('{:02x}'.format(x) for x in sd))
             ba = d.details['props']['ManufacturerData'][2409]
             print(ba)
             print(''.join('{:02x}'.format(x) for x in ba))
