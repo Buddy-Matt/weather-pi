@@ -78,7 +78,7 @@ class LocalData:
           keepTrying = False
         except:
           fails += 1
-          asyncio.sleep(2)
+          await asyncio.sleep(2)
           pass
 
       if self.__onUpdate != None:
