@@ -67,18 +67,24 @@ class LocalData:
       except:
         pass
 
-      try:
-        self.__dht11_temp = self.__dht.temperature
-        self.__dht11_humidity= self.__dht.humidity
-        self.__dht_timestamp = datetime.now()
-        self.__resetTimeout(self.__dhtTimeout)
-      except:
-        pass
+      keepTrying = True
+      fails = 0
+      while keepTrying and (fails < 15):
+        try:
+          self.__dht11_temp = self.__dht.temperature
+          self.__dht11_humidity= self.__dht.humidity
+          self.__dht_timestamp = datetime.now()
+          self.__resetTimeout(self.__dhtTimeout)
+          keepTrying = False
+        except:
+          fails += 1
+          asyncio.sleep(2)
+          pass
 
       if self.__onUpdate != None:
         self.__onUpdate()
 
-      await asyncio.sleep(30)
+      await asyncio.sleep(30 - fails * 2)
 
 
   def startPolling(self):
