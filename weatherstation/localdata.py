@@ -80,6 +80,7 @@ class LocalData:
           fails += 1
           if fails == 5: #reinit after 5 fails
             print ("Reinit DHT")
+            self.__dht.exit()
             self.__dht = adafruit_dht.DHT11(board.D4)
           await asyncio.sleep(2)
           pass
