@@ -11,6 +11,8 @@ class DigooData:
     self.__lostsignal = None
     self.__mainSensor = Sensor()
     self.__remoteSensor = Sensor()
+    self.__remoteSensor2 = Sensor()
+    self.__remoteSensor3 = Sensor()
     self.__pressure = None
     self.__forecast = None
     self.__timeoutTask = None
@@ -31,8 +33,8 @@ class DigooData:
 
     self.MainSensor = data[0x09:0x12]
     self.RemoteSensor = data[0x12:0x1b]
-#    self.RemoteSensor2 = data[0x1b:0x24]
-#    self.RemoteSensor3 = data[0x24:0x2d]
+    self.RemoteSensor2 = data[0x1b:0x24]
+    self.RemoteSensor3 = data[0x24:0x2d]
     self.Pressure = data[0x2f:0x31]
     self.Forecast = data[0x31]
 
@@ -111,6 +113,19 @@ class DigooData:
   def RemoteSensor(self,data: bytearray):
     self.__remoteSensor.Update(data)
 
+  @property
+  def RemoteSensor2(self):
+    return self.__remoteSensor2
+  @RemoteSensor2.setter
+  def RemoteSensor2(self,data: bytearray):
+    self.__remoteSensor2.Update(data)
+
+  @property
+  def RemoteSensor3(self):
+    return self.__remoteSensor3
+  @RemoteSensor3.setter
+  def RemoteSensor3(self,data: bytearray):
+    self.__remoteSensor3.Update(data)
 
   @property
   def DataList(self):
@@ -119,5 +134,7 @@ class DigooData:
       "Pressure": self.Pressure,
       "Forecast": self.Forecast,
       "MainSensor": self.MainSensor.DataList,
-      "RemoteSensor": self.RemoteSensor.DataList
+      "RemoteSensor": self.RemoteSensor.DataList,
+      "RemoteSensor2": self.RemoteSensor2.DataList,
+      "RemoteSensor3": self.RemoteSensor3.DataList
     }
