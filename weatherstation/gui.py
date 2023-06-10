@@ -51,14 +51,14 @@ def transparencify(img):
 
 #Helper to get tiles from web
 def grabImages(target,preXYurl,postXYurl):
-  finalimage = Image.new('RGB',(512,778))
+  finalimage = Image.new('RGB',(778,778))
 
-  for x in range(0,2):
+  for x in range(-1,2):
     for y in range(-1,2):
       url = "%s%s/%s/%s%s" % (preXYurl, target[2], target[0] + x, target[1] + y, postXYurl)
       print("Grabbing %s" % url)
       tile = Image.open(requests.get(url, headers={'User-Agent': 'WeatherPI'}, stream=True).raw)
-      finalimage.paste(tile,(x*256,(y+1)*256))
+      finalimage.paste(tile,((x+1)*256,(y+1)*256))
 
   return finalimage
 
@@ -89,6 +89,10 @@ class GUI():
     self.__tileTarget = deg2num(settings['lat'],settings['long'],settings['zoom'])
     self.__cropOffset = (settings['cropx'],settings['cropy'], settings['cropx']+400, settings['cropy']+480)
     self.__mapimage = grabImages(self.__tileTarget,"https://tile.openstreetmap.org/",".png").crop(self.__cropOffset)
+    self.__homeIcon =Image.open("weatherstation/img/home-outline.png")
+    self.__homeIcon.thumbnail((26,26))
+    self.__mapimage.paste(self.__homeIcon,(200-13,240-13),self.__homeIcon)
+
     self.__rainimages = []
 
     #mooninfo
@@ -100,6 +104,7 @@ class GUI():
     combinedimage = Image.new('RGBA',(400,480),"BLACK")
     combinedimage.paste(self.__mapimage,(0,0))
     combinedimage.paste(rainimage,(0,0),rainimage)
+    combinedimage.paste(self.__homeIcon,(200-13,240-13),self.__homeIcon)
     self.__rainimages.append((combinedimage,frame['time']))
   
 
