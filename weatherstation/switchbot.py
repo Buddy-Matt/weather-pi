@@ -18,7 +18,7 @@ class SwitchBot:
         print("SwitchBot data received")
         ba = d.details['props']['ManufacturerData'][2409]
         self.__battery = ba[7] & 127
-        self.__temp =(1 if (ba[9] & 128) == 128 else -1) * (ba[9] & 127) + (ba[8] / 10)
+        self.__temp =(1 if (ba[9] & 128) == 128 else -1) * ((ba[9] & 127) + (ba[8] / 10))
         self.__humidity = ba[10]
         self.__timestamp = datetime.now()
         if self.__onUpdate != None:
